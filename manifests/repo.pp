@@ -7,7 +7,7 @@ class dataloop_agent::repo(
   case $::operatingsystem {
     'RedHat', 'CentOS', 'Fedora', 'Scientific', 'SL', 'SLC', 'Ascendos',
     'CloudLinux', 'PSBM', 'OracleLinux', 'OVS', 'OEL', 'Amazon', 'XenServer': {
-  
+
       yumrepo { 'dataloop':
         baseurl  => "https://download.dataloop.io/packages/${release}/rpm/${::architecture}",
         descr    => 'Dataloop Repository',
@@ -25,15 +25,18 @@ class dataloop_agent::repo(
     }
     'Debian', 'Ubuntu': {
       require ::apt
-      apt::key { 'dataloop':
-        id     => '095E8A4D6D9018DD45BD8E870008AA66113E2B8D',
-        source => $gpg_key_url,
+
+      # Avoid apt::key due to breaking changes between 1.x.x and 2.x.x
+      # 'apt-key add -' is an indempotent command
+      exec { 'add_dataloop_apt_key':
+        command => "/usr/bin/wget -qO - ${gpg_key_url} | /usr/bin/apt-key add -"
       }
+
       apt::source { 'dataloop':
         location => 'https://download.dataloop.io/deb',
         release  => $release,
         repos    => 'main',
-        require  => Apt::Key['dataloop'],
+        require  => Exec['add_dataloop_apt_key'],
       }
     }
     default: {
@@ -42,4 +45,3 @@ class dataloop_agent::repo(
   }
 
 }
-
