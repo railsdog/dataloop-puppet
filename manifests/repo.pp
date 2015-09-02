@@ -24,7 +24,7 @@ class dataloop_agent::repo(
 
     }
     'Debian', 'Ubuntu': {
-      require ::apt
+      include apt
 
       # Avoid apt::key due to breaking changes between 1.x.x and 2.x.x
       # 'apt-key add -' is an indempotent command
