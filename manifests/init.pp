@@ -32,7 +32,7 @@ class dataloop_agent(
       package { 'dataloop-agent':
         ensure          => $agent_version,
         install_options => $install_opts,
-        require         => [ Exec['apt_update'], Apt::Source['dataloop'] ],
+        require         => Apt::Source['dataloop'],
       }
       service { 'dataloop-agent':
         ensure     => running,
@@ -57,7 +57,7 @@ class dataloop_agent(
       require => Package['dataloop-agent'],
     }
   }
-  
+
   file { '/etc/dataloop/agent.yaml':
     ensure  => 'present',
     content => template('dataloop_agent/agent.yaml.erb'),
@@ -76,5 +76,5 @@ class dataloop_agent(
     mode    => '0644',
     require => Package['dataloop-agent'],
   }
-  
+
 }
