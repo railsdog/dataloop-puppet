@@ -37,7 +37,7 @@ class dataloop_agent::repo(
         location => 'https://download.dataloop.io/deb',
         release  => $release,
         repos    => 'main',
-        require  => Apt::Key['dataloop'],
+        require  => Exec['add_dataloop_apt_key'],
       }
     }
     default: {
