@@ -34,10 +34,11 @@ class dataloop_agent::repo(
       }
 
       apt::source { 'dataloop':
-        location => 'https://download.dataloop.io/deb',
-        release  => $release,
-        repos    => 'main',
-        require  => Exec['add_dataloop_apt_key'],
+        location    => 'https://download.dataloop.io/deb',
+        release     => $release,
+        repos       => 'main',
+        include_src => false,
+        require     => Exec['add_dataloop_apt_key'],
       }
     }
     default: {
